@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vle8-app-green
+  namespace: vle8
+  labels:
+    app: vle8-app
+    color: green
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: vle8-app
+      color: green
+
+  template:
+    metadata:
+      labels:
+        app: vle8-app
+        color: green
+
+    spec:
+      containers:
+        - name: app
+          image: hrishikesh13579/vle8-blue-green-app:initial
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: APP_ENV
+              value: "GREEN"
+
+            - name: APP_VERSION
+              value: "2.0"
+
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20

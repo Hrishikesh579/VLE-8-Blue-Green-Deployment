@@ -1,0 +1,53 @@
+---
+- name: Configure existing EC2 host for VLE-8
+  hosts: webservers
+  become: true
+
+  tasks:
+
+    - name: Update package index
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Check Docker installation
+      ansible.builtin.command:
+        cmd: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Display Docker version
+      ansible.builtin.debug:
+        msg: "{{ docker_version.stdout }}"
+
+    - name: Ensure Docker service is running
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Ensure K3s service is running
+      ansible.builtin.service:
+        name: k3s
+        state: started
+        enabled: true
+
+    - name: Check K3s node status
+      ansible.builtin.command:
+        cmd: kubectl get nodes
+      register: k3s_nodes
+      changed_when: false
+
+    - name: Display Kubernetes node status
+      ansible.builtin.debug:
+        msg: "{{ k3s_nodes.stdout }}"
+
+    - name: Check available disk space
+      ansible.builtin.command:
+        cmd: df -h /
+      register: disk_status
+      changed_when: false
+
+    - name: Display disk status
+      ansible.builtin.debug:
+        msg: "{{ disk_status.stdout }}"

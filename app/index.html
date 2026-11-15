@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLE-8 Blue-Green Deployment</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background: #202938;
+            color: white;
+            padding: 25px;
+        }
+
+        main {
+            margin: 60px auto;
+            padding: 30px;
+            max-width: 650px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .version {
+            display: inline-block;
+            padding: 14px 28px;
+            border-radius: 8px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .blue {
+            background: #2563eb;
+        }
+
+        .green {
+            background: #16a34a;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>VLE-8 DevOps Experiment</h1>
+    <p>Blue-Green Deployment using DevOps Tools</p>
+</header>
+
+<main>
+    <h2>Application Successfully Deployed</h2>
+
+    <div id="version" class="version">
+        Loading environment...
+    </div>
+
+    <p>
+        This application demonstrates Blue-Green Deployment
+        using Docker, Jenkins and Kubernetes.
+    </p>
+
+    <p>
+        The live environment can be switched without
+        changing the application's public URL.
+    </p>
+
+    <footer>
+        Cloud and DevOps Laboratory — VLE-8
+    </footer>
+</main>
+
+<script>
+    fetch("/version")
+        .then(response => response.json())
+        .then(data => {
+            const version = document.getElementById("version");
+
+            version.textContent = data.environment + " — " + data.version;
+
+            version.classList.add(
+                data.environment.toLowerCase()
+            );
+        })
+        .catch(() => {
+            document.getElementById("version").textContent =
+                "Unable to retrieve deployment version";
+        });
+</script>
+
+</body>
+</html>
